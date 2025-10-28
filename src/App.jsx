@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Trash2, Plus, Check, Calendar, Moon, Sun } from 'lucide-react';
+import { Trash2, Plus, Check, Calendar, Moon, Sun, TestTube } from 'lucide-react';
+import TestRunner from './TestRunner';
 
 export default function TodoApp() {
   const [todos, setTodos] = useState([]);
@@ -9,6 +10,7 @@ export default function TodoApp() {
     const saved = localStorage.getItem('darkMode');
     return saved === 'true';
   });
+  const [showTests, setShowTests] = useState(false);
 
   // Persist dark mode preference
   useEffect(() => {
@@ -117,20 +119,48 @@ export default function TodoApp() {
             }`}>
               My To-Do List
             </h1>
-            <button
-              onClick={() => setDarkMode(!darkMode)}
-              className={`p-3 rounded-lg transition-all hover:scale-110 ${
-                darkMode 
-                  ? 'bg-gray-700 text-yellow-400 hover:bg-gray-600' 
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-              data-testid="dark-mode-toggle"
-              aria-label="Toggle dark mode"
-            >
-              {darkMode ? <Sun size={24} /> : <Moon size={24} />}
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShowTests(!showTests)}
+                className={`p-3 rounded-lg transition-all hover:scale-110 ${
+                  darkMode 
+                    ? 'bg-purple-600 text-white hover:bg-purple-500' 
+                    : 'bg-purple-500 text-white hover:bg-purple-600'
+                }`}
+                aria-label="Run tests"
+                title="Run automated tests"
+              >
+                <TestTube size={24} />
+              </button>
+              <button
+                onClick={() => setDarkMode(!darkMode)}
+                className={`p-3 rounded-lg transition-all hover:scale-110 ${
+                  darkMode 
+                    ? 'bg-gray-700 text-yellow-400 hover:bg-gray-600' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+                data-testid="dark-mode-toggle"
+                aria-label="Toggle dark mode"
+              >
+                {darkMode ? <Sun size={24} /> : <Moon size={24} />}
+              </button>
+            </div>
           </div>
           
+          {showTests && (
+            <TestRunner
+              darkMode={darkMode}
+              setDarkMode={setDarkMode}
+              todos={todos}
+              setTodos={setTodos}
+              input={input}
+              setInput={setInput}
+              dueDate={dueDate}
+              setDueDate={setDueDate}
+              onClose={() => setShowTests(false)}
+            />
+          )}
+
           <div className="flex flex-col md:flex-row gap-3 mb-10" data-testid="add-todo-form">
             <input
               type="text"
