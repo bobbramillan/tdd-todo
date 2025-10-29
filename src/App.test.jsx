@@ -34,7 +34,6 @@ describe('TodoApp', () => {
     await user.type(input, 'Buy groceries');
     await user.click(addButton);
     
-    // Should not add without due date
     expect(screen.getByTestId('empty-state')).toBeInTheDocument();
   });
 
